@@ -17,7 +17,7 @@ export async function clientLoader() {
   return { contacts };
 }
 
-export default function App({ loaderData }) {
+export default function App({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
   return (
     <>
