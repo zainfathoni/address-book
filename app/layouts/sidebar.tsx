@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
@@ -15,6 +22,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const navigation = useNavigation();
   // the query now needs to be kept in state
   const [query, setQuery] = useState(q || "");
+  const submit = useSubmit();
 
   // we still have a `useEffect` to synchronize the query
   // to the component state on back/forward button clicks
@@ -29,7 +37,13 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           <Link to="about">React Router Contacts</Link>
         </h1>
         <div>
-          <Form id="search-form" role="search">
+          <Form
+            id="search-form"
+            role="search"
+            onChange={(event) => {
+              submit(event.currentTarget);
+            }}
+          >
             <input
               aria-label="Search contacts"
               id="q"
