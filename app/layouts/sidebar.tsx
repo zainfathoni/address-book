@@ -44,7 +44,10 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
             id="search-form"
             role="search"
             onChange={(event) => {
-              submit(event.currentTarget);
+              const isFirstSearch = q === null;
+              submit(event.currentTarget, {
+                replace: !isFirstSearch,
+              });
             }}
           >
             <input
