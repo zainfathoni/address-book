@@ -68,6 +68,15 @@ export default function App({ loaderData }: Route.ComponentProps) {
   );
 }
 
+export function HydrateFallback() {
+  return (
+    <div id="loading-splash">
+      <div id="loading-splash-spinner" />
+      <p>Loading, please wait...</p>
+    </div>
+  );
+}
+
 // The Layout component is a special export for the root route.
 // It acts as your document's "app shell" for all route components, HydrateFallback, and ErrorBoundary
 // For more information, see https://reactrouter.com/explanation/special-files#layout-export
