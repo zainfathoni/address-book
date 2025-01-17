@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
@@ -13,12 +13,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
+  // the query now needs to be kept in state
+  const [query, setQuery] = useState(q || "");
 
+  // we still have a `useEffect` to synchronize the query
+  // to the component state on back/forward button clicks
   useEffect(() => {
-    const searchField = document.getElementById("q");
-    if (searchField instanceof HTMLInputElement) {
-      searchField.value = q || "";
-    }
+    setQuery(q || "");
   }, [q]);
 
   return (
@@ -35,7 +36,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
               name="q"
               placeholder="Search"
               type="search"
-              defaultValue={q || ""}
+              value={query}
+              // synchronize user's input to component state
+              onChange={(event) => setQuery(event.currentTarget.value)}
             />
             <div aria-hidden hidden={true} id="search-spinner" />
           </Form>
