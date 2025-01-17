@@ -23,6 +23,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   // the query now needs to be kept in state
   const [query, setQuery] = useState(q || "");
   const submit = useSubmit();
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
 
   // we still have a `useEffect` to synchronize the query
   // to the component state on back/forward button clicks
@@ -46,6 +49,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           >
             <input
               aria-label="Search contacts"
+              className={searching ? "loading" : ""}
               id="q"
               name="q"
               placeholder="Search"
@@ -54,7 +58,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
               // synchronize user's input to component state
               onChange={(event) => setQuery(event.currentTarget.value)}
             />
-            <div aria-hidden hidden={true} id="search-spinner" />
+            <div aria-hidden hidden={!searching} id="search-spinner" />
           </Form>
           <Form method="post">
             <button type="submit">New</button>
@@ -90,7 +94,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
       </div>
       <div
         id="detail"
-        className={navigation.state === "loading" ? "loading" : ""}
+        className={
+          navigation.state === "loading" && !searching ? "loading" : ""
+        }
       >
         <Outlet />
       </div>
