@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
@@ -10,8 +11,16 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
-  const { contacts } = loaderData;
+  const { contacts, q } = loaderData;
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
+
   return (
     <>
       <div id="sidebar">
@@ -26,6 +35,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
               name="q"
               placeholder="Search"
               type="search"
+              defaultValue={q || ""}
             />
             <div aria-hidden hidden={true} id="search-spinner" />
           </Form>
