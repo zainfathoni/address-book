@@ -308,6 +308,12 @@ export async function deleteContact(id: string) {
     last: "Jensen",
     twitter: "@jenseng",
   },
+  {
+    avatar: "https://unavatar.io/x/zainfathoni",
+    first: "Zain",
+    last: "Fathoni",
+    twitter: "@zainfathoni",
+  },
 ].forEach((contact) => {
   fakeContacts.create({
     ...contact,
