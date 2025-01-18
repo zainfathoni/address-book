@@ -1,5 +1,3 @@
-import { use } from "react";
-
 /**
  * {
   "login": "zainfathoni",
@@ -75,12 +73,11 @@ type GitHubUser = {
 
 export default function GitHubUser({
   username,
-  data,
+  data: user,
 }: {
   username?: string;
-  data: Promise<GitHubUser>;
+  data: GitHubUser;
 }) {
-  const user = use(data);
   if (!user.login) {
     return (
       <div>

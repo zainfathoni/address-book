@@ -1,6 +1,5 @@
 import { Form, useFetcher } from "react-router";
 
-import { Suspense } from "react";
 import GitHubUser from "../components/github-user";
 import { getContact, updateContact, type ContactRecord } from "../data";
 import { getGithubUser } from "../github-data";
@@ -9,7 +8,7 @@ import type { Route } from "./+types/contact";
 export async function loader({ params }: Route.LoaderArgs) {
   const contact = await getContact(params.contactId);
   // TODO: use github username instead of twitter
-  const githubUser = getGithubUser(contact?.twitter?.substring(1));
+  const githubUser = await getGithubUser(contact?.twitter?.substring(1));
   return { contact, githubUser };
 }
 
@@ -84,15 +83,7 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div id="github">
-        <Suspense
-          fallback={
-            <div>
-              Loading GitHub data for <code>{contact.twitter}</code> username...
-            </div>
-          }
-        >
-          <GitHubUser username={contact.twitter} data={githubUser} />
-        </Suspense>
+        <GitHubUser username={contact.twitter} data={githubUser} />
       </div>
     </main>
   );
