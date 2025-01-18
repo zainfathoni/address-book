@@ -24,6 +24,7 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 
   return (
     <div id="contact">
+      <title>{`${contact.first} ${contact.last} - React Router Contacts`}</title>
       <div>
         <img
           alt={`${contact.first} ${contact.last} avatar`}

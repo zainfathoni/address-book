@@ -3,6 +3,7 @@ import { Link } from "react-router";
 export default function About() {
   return (
     <div id="about">
+      <title>About - React Router Contacts</title>
       <Link to="/">← Go to demo</Link>
       <h1>About React Router Contacts</h1>
 
