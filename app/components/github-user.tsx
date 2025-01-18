@@ -73,12 +73,35 @@ type GitHubUser = {
   updated_at: string;
 };
 
-export default function GitHubUser({ data }: { data: Promise<GitHubUser> }) {
+export default function GitHubUser({
+  username,
+  data,
+}: {
+  username?: string;
+  data: Promise<GitHubUser>;
+}) {
   const user = use(data);
+  if (!user.login) {
+    return (
+      <div>
+        GitHub user with <code>{username}</code> username not found.
+      </div>
+    );
+  }
   return (
     <div>
+      <dt>Company</dt>
+      <dd>{user.company}</dd>
+      <dt>Location</dt>
+      <dd>{user.location}</dd>
+      <dt>Bio</dt>
+      <dd>{user.bio}</dd>
       <dt>Website</dt>
-      <dd>{user.blog}</dd>
+      <dd>
+        <a href={user.blog} target="_blank" rel="noopener noreferrer">
+          {user.blog}
+        </a>
+      </dd>
       <dt>Public Repos</dt>
       <dd>{user.public_repos}</dd>
       <dt>Followers</dt>

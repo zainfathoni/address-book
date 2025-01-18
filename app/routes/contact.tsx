@@ -84,8 +84,14 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div id="github">
-        <Suspense fallback={<div>Loading GitHub data...</div>}>
-          <GitHubUser data={githubUser} />
+        <Suspense
+          fallback={
+            <div>
+              Loading GitHub data for <code>{contact.twitter}</code> username...
+            </div>
+          }
+        >
+          <GitHubUser username={contact.twitter} data={githubUser} />
         </Suspense>
       </div>
     </main>
