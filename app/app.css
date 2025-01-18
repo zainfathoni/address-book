@@ -431,3 +431,15 @@ i {
   animation: spin 1s infinite linear;
   margin-bottom: 1rem;
 }
+
+#contact-page {
+  display: flex;
+  flex-direction: column;
+
+  #github {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+}

@@ -1,11 +1,16 @@
 import { Form, useFetcher } from "react-router";
 
+import { Suspense } from "react";
+import GitHubUser from "../components/github-user";
 import { getContact, updateContact, type ContactRecord } from "../data";
+import { getGithubUser } from "../github-data";
 import type { Route } from "./+types/contact";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const contact = await getContact(params.contactId);
-  return { contact };
+  // TODO: use github username instead of twitter
+  const githubUser = getGithubUser(contact?.twitter?.substring(1));
+  return { contact, githubUser };
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
@@ -16,67 +21,74 @@ export async function action({ request, params }: Route.ActionArgs) {
 }
 
 export default function Contact({ loaderData }: Route.ComponentProps) {
-  const { contact } = loaderData;
+  const { contact, githubUser } = loaderData;
 
   if (!contact) {
     throw new Response("Not Found", { status: 404 });
   }
 
   return (
-    <div id="contact">
-      <title>{`${contact.first} ${contact.last} - React Router Contacts`}</title>
-      <div>
-        <img
-          alt={`${contact.first} ${contact.last} avatar`}
-          key={contact.avatar}
-          src={contact.avatar}
-        />
-      </div>
-
-      <div>
-        <h1>
-          {contact.first || contact.last ? (
-            <>
-              {contact.first} {contact.last}
-            </>
-          ) : (
-            <i>No Name</i>
-          )}
-          <Favorite contact={contact} />
-        </h1>
-
-        {contact.twitter ? (
-          <p>
-            <a href={`https://twitter.com/${contact.twitter}`}>
-              {contact.twitter}
-            </a>
-          </p>
-        ) : null}
-
-        {contact.notes ? <p>{contact.notes}</p> : null}
+    <main id="contact-page">
+      <div id="contact">
+        <title>{`${contact.first} ${contact.last} - React Router Contacts`}</title>
+        <div>
+          <img
+            alt={`${contact.first} ${contact.last} avatar`}
+            key={contact.avatar}
+            src={contact.avatar}
+          />
+        </div>
 
         <div>
-          <Form action="edit">
-            <button type="submit">Edit</button>
-          </Form>
+          <h1>
+            {contact.first || contact.last ? (
+              <>
+                {contact.first} {contact.last}
+              </>
+            ) : (
+              <i>No Name</i>
+            )}
+            <Favorite contact={contact} />
+          </h1>
 
-          <Form
-            action="destroy"
-            method="post"
-            onSubmit={(event) => {
-              const response = confirm(
-                "Please confirm you want to delete this record.",
-              );
-              if (!response) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <button type="submit">Delete</button>
-          </Form>
+          {contact.twitter ? (
+            <p>
+              <a href={`https://twitter.com/${contact.twitter}`}>
+                {contact.twitter}
+              </a>
+            </p>
+          ) : null}
+
+          {contact.notes ? <p>{contact.notes}</p> : null}
+
+          <div>
+            <Form action="edit">
+              <button type="submit">Edit</button>
+            </Form>
+
+            <Form
+              action="destroy"
+              method="post"
+              onSubmit={(event) => {
+                const response = confirm(
+                  "Please confirm you want to delete this record.",
+                );
+                if (!response) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <button type="submit">Delete</button>
+            </Form>
+          </div>
         </div>
       </div>
-    </div>
+      <div id="github">
+        <Suspense fallback={<div>Loading GitHub data...</div>}>
+          <GitHubUser data={githubUser} />
+        </Suspense>
+      </div>
+    </main>
   );
 }
 
