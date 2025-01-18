@@ -77,6 +77,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
                       isActive ? "active" : isPending ? "pending" : ""
                     }
                     to={`contacts/${contact.id}`}
+                    prefetch="intent"
                   >
                     {contact.first || contact.last ? (
                       <>
